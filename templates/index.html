@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Price Viewer</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <h1 class="fancy-title">Crypto Price Viewer</h1>
+
+  <label for="coin-select">Select Coin:</label>
+  <select id="coin-select">
+    <option value="Avalanche">Avalanche</option>
+    <option value="Bitcoin">Bitcoin</option>
+    <option value="BNB">BNB</option>
+    <option value="Cardano">Cardano</option>
+    <option value="Chainlink">Chainlink</option>
+    <option value="Dogecoin">Dogecoin</option>
+    <option value="Ethereum">Ethereum</option>
+    <option value="Hedera">Hedera</option>
+    <option value="Litecoin">Litecoin</option>
+  </select>
+
+  <label for="start-date">Start Date:</label>
+  <input type="date" id="start-date">
+
+  <label for="end-date">End Date:</label>
+  <input type="date" id="end-date">
+
+  <button type="button" onclick="fetchCryptoData()">Load Data</button>
+
+  <table border="1" id="crypto-table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Price</th>
+        <th scope="col">Open</th>
+        <th scope="col">High</th>
+        <th scope="col">Low</th>
+        <th scope="col">Change %</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="/static/script.js" defer></script>
+</body>
+</html>
