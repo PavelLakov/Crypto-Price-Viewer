@@ -1,27 +1,19 @@
 function fetchCryptoData() {
-  console.log("fetchCryptoData called");
-
   const coin = document.getElementById("coin-select").value;
-  const startDate = document.getElementById("start-date").value;
-  const endDate = document.getElementById("end-date").value;
+  const startDate = document.getElementById("start-date").value; // YYYY-MM-DD
+  const endDate = document.getElementById("end-date").value;     // YYYY-MM-DD
 
-  fetch(`/crypto/${coin}`)
-    .then(response => response.json())
+  const params = new URLSearchParams();
+  if (startDate) params.append("start", startDate);
+  if (endDate) params.append("end", endDate);
+
+  fetch(`/crypto/${coin}?${params.toString()}`)
+    .then(r => r.json())
     .then(data => {
-      console.log("Data received:", data);
-
       const tableBody = document.querySelector("#crypto-table tbody");
       tableBody.innerHTML = "";
 
-      const filtered = data.filter(entry => {
-        const entryDate = new Date(entry.Date);
-        const from = startDate ? new Date(startDate) : null;
-        const to = endDate ? new Date(endDate) : null;
-
-        return (!from || entryDate >= from) && (!to || entryDate <= to);
-      });
-
-      filtered.forEach(entry => {
+      data.forEach(entry => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${entry.Date}</td>
@@ -34,9 +26,7 @@ function fetchCryptoData() {
         tableBody.appendChild(row);
       });
     })
-    .catch(error => {
-      console.error("Error fetching data:", error);
-    });
+    .catch(err => console.error("Error fetching data:", err));
 }
 
-console.log("script.js loaded");
+
