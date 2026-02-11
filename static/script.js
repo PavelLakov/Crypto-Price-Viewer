@@ -1,19 +1,45 @@
+// Runs after the page is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("load-data-btn");
+  if (btn) btn.addEventListener("click", fetchCryptoData);
+});
+
 function fetchCryptoData() {
   const coin = document.getElementById("coin-select").value;
-  const startDate = document.getElementById("start-date").value; // YYYY-MM-DD
-  const endDate = document.getElementById("end-date").value;     // YYYY-MM-DD
+
+  let startDate = document.getElementById("start-date").value; // YYYY-MM-DD
+  let endDate = document.getElementById("end-date").value;     // YYYY-MM-DD
+
+  // If both are set and start > end, swap them
+  if (startDate && endDate && startDate > endDate) {
+    const tmp = startDate;
+    startDate = endDate;
+    endDate = tmp;
+
+    document.getElementById("start-date").value = startDate;
+    document.getElementById("end-date").value = endDate;
+  }
 
   const params = new URLSearchParams();
   if (startDate) params.append("start", startDate);
   if (endDate) params.append("end", endDate);
 
   fetch(`/crypto/${coin}?${params.toString()}`)
-    .then(r => r.json())
-    .then(data => {
+    .then(async (res) => {
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Request failed");
+      return data;
+    })
+    .then((data) => {
       const tableBody = document.querySelector("#crypto-table tbody");
       tableBody.innerHTML = "";
 
-      data.forEach(entry => {
+      if (!data.length) {
+        tableBody.innerHTML = `<tr><td colspan="6">No data for this date range.</td></tr>`;
+        return;
+      }
+
+      data.forEach((entry) => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${entry.Date}</td>
@@ -26,7 +52,11 @@ function fetchCryptoData() {
         tableBody.appendChild(row);
       });
     })
-    .catch(err => console.error("Error fetching data:", err));
+    .catch((err) => {
+      console.error(err);
+      const tableBody = document.querySelector("#crypto-table tbody");
+      tableBody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`;
+    });
 }
 
 
