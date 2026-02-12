@@ -1,9 +1,3 @@
-// Runs after the page is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("load-data-btn");
-  if (btn) btn.addEventListener("click", fetchCryptoData);
-});
-
 function fetchCryptoData() {
   const coin = document.getElementById("coin-select").value;
 
@@ -58,5 +52,3 @@ function fetchCryptoData() {
       tableBody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`;
     });
 }
-
-
